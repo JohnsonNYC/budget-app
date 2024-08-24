@@ -40,7 +40,6 @@ const MainDash = () => {
     }, 0);
   }, [totalExpensesList]);
 
-  console.log({ TOTAL_EXPENSES, TOTAL_INCOME });
   return (
     <Container>
       <Panel
@@ -53,6 +52,8 @@ const MainDash = () => {
           width: "75%",
           display: "flex",
           flexDirection: "column",
+          overflowY: "scroll",
+          marginLeft: "25%",
         }}
       >
         <DataVisualizer

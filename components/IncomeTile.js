@@ -59,6 +59,5 @@ const Remove = styled.button`
 
   &:hover {
     cursor: pointer;
-    color: red;
   }
 `;

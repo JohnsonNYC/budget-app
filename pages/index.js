@@ -1,7 +1,6 @@
 import Head from "next/head";
 import DashboardPage from "../components/DashboardPage";
 import Footer from "../components/Footer";
-import Header from "../components/Header";
 
 export default function Home() {
   return (
@@ -12,8 +11,6 @@ export default function Home() {
       </Head>
 
       <DashboardPage />
-
-      <Footer />
     </div>
   );
 }

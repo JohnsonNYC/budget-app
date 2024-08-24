@@ -61,17 +61,26 @@ const Panel = ({ totalIncome, totalIncomeList, setTotalIncomeList }) => {
       <Modal open={isModalOpen} onClose={toggleModal}>
         <UpdateBudgetForm type="income" addIncome={addIncome} />
       </Modal>
+
+      <Footer>Made By JohnsonNYC</Footer>
     </PanelContainer>
   );
 };
 
 export default Panel;
 
+const Footer = styled.footer`
+  position: fixed;
+  bottom: 0;
+  padding: 1rem;
+`;
 const PanelContainer = styled.div`
   width: 25%;
   height: 100%;
   background: var(--purple-600);
   padding: 1rem;
+  position: fixed;
+  left: 0;
 `;
 
 const AddIncome = styled.div`
