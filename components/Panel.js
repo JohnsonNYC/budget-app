@@ -57,9 +57,7 @@ const Panel = ({
   };
 
   useEffect(() => {
-    if (prefillData) {
-      setIsModalOpen(true);
-    }
+    setIsModalOpen(Boolean(prefillData));
   }, [prefillData]);
 
   return (

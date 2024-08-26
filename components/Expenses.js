@@ -37,7 +37,12 @@ const Expenses = ({
   };
 
   const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
+    let newVal = !isModalOpen;
+    setIsModalOpen(newVal);
+
+    if (!newVal) {
+      setPrefillData(null);
+    }
   };
 
   const editData = (key, updatedTileData) => {
@@ -52,9 +57,7 @@ const Expenses = ({
   };
 
   useEffect(() => {
-    if (prefillData) {
-      setIsModalOpen(true);
-    }
+    setIsModalOpen(Boolean(prefillData));
   }, [prefillData]);
 
   return (
