@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import IncomeTile from "./IncomeTile";
@@ -8,8 +8,14 @@ import Modal from "./Modal";
 import { Plus } from "lucide-react";
 import { formatMoney } from "../utils/string";
 
-const Panel = ({ totalIncome, totalIncomeList, setTotalIncomeList }) => {
+const Panel = ({
+  leftOverBalance,
+  totalIncome,
+  totalIncomeList,
+  setTotalIncomeList,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [prefillData, setPrefillData] = useState(null);
 
   const addIncome = (name, amount) => {
     let copyIncomeList = [...totalIncomeList];
@@ -22,23 +28,61 @@ const Panel = ({ totalIncome, totalIncomeList, setTotalIncomeList }) => {
     setTotalIncomeList(copyIncomeList);
   };
 
-  const removeIncome = (key) => {
+  const removeIncome = (e, key) => {
+    e.stopPropagation();
     let copyIncomeList = [...totalIncomeList];
     copyIncomeList = copyIncomeList.filter((incomeEl) => incomeEl.key !== key);
 
     setTotalIncomeList(copyIncomeList);
   };
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
+  const editData = (key, updatedTileData) => {
+    let copyIncomeList = [...totalIncomeList];
+    copyIncomeList.splice(key, 1, updatedTileData);
+    setTotalIncomeList(copyIncomeList);
   };
+
+  const toggleModal = () => {
+    const newVal = !isModalOpen;
+    setIsModalOpen(!isModalOpen);
+
+    if (!newVal) {
+      setPrefillData(null);
+    }
+  };
+
+  const openEditModal = (e, incomeEl) => {
+    e.stopPropagation();
+    setPrefillData(incomeEl);
+  };
+
+  useEffect(() => {
+    if (prefillData) {
+      setIsModalOpen(true);
+    }
+  }, [prefillData]);
+
   return (
     <PanelContainer>
       <h2>Budgeting</h2>
       <h2>Progress</h2>
+
+      <TotalDescription>
+        <h3>Left Over Balance</h3>
+        <h3
+          style={{
+            color: `var(${leftOverBalance > 0 ? "--green-500" : "--red-400"})`,
+          }}
+        >
+          ${formatMoney(leftOverBalance)}
+        </h3>
+      </TotalDescription>
+
       <TotalDescription>
         <h4>Total Income</h4>
-        <h4>${formatMoney(totalIncome)}</h4>
+        <h4 style={{ color: "var(--purple-300)" }}>
+          ${formatMoney(totalIncome)}
+        </h4>
       </TotalDescription>
 
       <AddIncome onClick={toggleModal}>
@@ -53,13 +97,19 @@ const Panel = ({ totalIncome, totalIncomeList, setTotalIncomeList }) => {
               key={incomeEl.key}
               tileData={incomeEl}
               remove={removeIncome}
+              handleClick={openEditModal}
             />
           ))}
         </IncomeContainer>
       ) : null}
 
       <Modal open={isModalOpen} onClose={toggleModal}>
-        <UpdateBudgetForm type="income" addIncome={addIncome} />
+        <UpdateBudgetForm
+          type="income"
+          addIncome={addIncome}
+          prefillData={prefillData}
+          editData={editData}
+        />
       </Modal>
 
       <Footer>Made By JohnsonNYC</Footer>
@@ -119,5 +169,22 @@ const AddIncome = styled.div`
 const TotalDescription = styled.div`
   display: flex;
   justify-content: space-between;
+
+  h3:last-of-type {
+    color: red;
+  }
 `;
-const IncomeContainer = styled.div``;
+const IncomeContainer = styled.div`
+  max-height: 58vh;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    background-color: white;
+  }
+
+  /* Add a thumb */
+  &::-webkit-scrollbar-thumb {
+    background: var(--graphite-400);
+  }
+`;

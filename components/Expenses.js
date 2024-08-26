@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import IncomeTile from "./IncomeTile";
 import Modal from "./Modal";
@@ -13,6 +13,7 @@ const Expenses = ({
   setTotalExpensesList,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [prefillData, setPrefillData] = useState(null);
 
   const addExpense = (name, amount) => {
     let copyExpensesList = [...totalExpensesList];
@@ -25,7 +26,8 @@ const Expenses = ({
     setTotalExpensesList(copyExpensesList);
   };
 
-  const removeExpense = (key) => {
+  const removeExpense = (e, key) => {
+    e.stopPropagation();
     let copyExpensesList = [...totalExpensesList];
     copyExpensesList = copyExpensesList.filter(
       (expenseEl) => expenseEl.key !== key
@@ -37,6 +39,24 @@ const Expenses = ({
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
+
+  const editData = (key, updatedTileData) => {
+    let copyExpenseList = [...totalExpensesList];
+    copyExpenseList.splice(key, 1, updatedTileData);
+    setTotalExpensesList(copyExpenseList);
+  };
+
+  const openEditModal = (e, incomeEl) => {
+    e.stopPropagation();
+    setPrefillData(incomeEl);
+  };
+
+  useEffect(() => {
+    if (prefillData) {
+      setIsModalOpen(true);
+    }
+  }, [prefillData]);
+
   return (
     <Wrapper>
       <TotalEl>
@@ -56,13 +76,19 @@ const Expenses = ({
               key={expenseEl.key}
               tileData={expenseEl}
               remove={removeExpense}
+              handleClick={openEditModal}
             />
           ))}
         </IncomeContainer>
       ) : null}
 
       <Modal open={isModalOpen} onClose={toggleModal}>
-        <UpdateBudgetForm type={"expense"} addExpense={addExpense} />
+        <UpdateBudgetForm
+          type={"expense"}
+          addExpense={addExpense}
+          editData={editData}
+          prefillData={prefillData}
+        />
       </Modal>
     </Wrapper>
   );
@@ -117,6 +143,17 @@ const AddExpense = styled.div`
 `;
 
 const IncomeContainer = styled.div`
-  overflow-y: auto;
   width: 100%;
+  max-height: 30vh;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    background-color: white;
+  }
+
+  /* Add a thumb */
+  &::-webkit-scrollbar-thumb {
+    background: var(--graphite-400);
+  }
 `;

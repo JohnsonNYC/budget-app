@@ -60,7 +60,7 @@ const renderActiveShape = (props) => {
         x={ex + (cos >= 0 ? 1 : -1) * 12}
         y={ey}
         textAnchor={textAnchor}
-        fill="#333"
+        fill="#fff"
       >{`$${formatMoney(value)}`}</text>
 
       <text

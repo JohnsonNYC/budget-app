@@ -40,9 +40,12 @@ const MainDash = () => {
     }, 0);
   }, [totalExpensesList]);
 
+  const LEFT_OVER_BALANCE = TOTAL_INCOME - TOTAL_EXPENSES;
+
   return (
     <Container>
       <Panel
+        leftOverBalance={LEFT_OVER_BALANCE}
         totalIncome={TOTAL_INCOME}
         totalIncomeList={totalIncomeList}
         setTotalIncomeList={setTotalIncomeList}

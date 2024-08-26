@@ -3,13 +3,13 @@ import styled from "styled-components";
 import { capitalizeWords, formatMoney } from "../utils/string";
 import { X } from "lucide-react";
 
-const IncomeTile = ({ tileData, remove }) => {
+const IncomeTile = ({ tileData, remove, handleClick }) => {
   const { provider, amount } = tileData;
   return (
-    <Tile>
+    <Tile onClick={(e) => handleClick(e, tileData)}>
       <div>{capitalizeWords(provider)}</div>
       <div>${formatMoney(amount)}</div>
-      <Remove onClick={() => remove(tileData.key)}>
+      <Remove onClick={(e) => remove(e, tileData.key)}>
         <X size={16} />
       </Remove>
     </Tile>
@@ -19,7 +19,7 @@ const IncomeTile = ({ tileData, remove }) => {
 export default IncomeTile;
 
 const Tile = styled.div`
-  width: 99%;
+  width: 98%;
   position: relative;
   padding: 1rem;
   border-radius: 10px;
@@ -52,12 +52,16 @@ const Remove = styled.button`
 
   position: absolute;
   right: 0;
+  top: 0;
+  bottom: 0;
 
   display: none;
   align-items: center;
   justify-content: center;
+  border-radius: 10px;
 
   &:hover {
     cursor: pointer;
+    background: var(--purple-300);
   }
 `;

@@ -14,14 +14,23 @@
   --black-200: #292929; 
   --black-300: #A8A8A8; 
   --black-400: #676767; 
-
+  --green-100:#003421;
+  --green-200:#0C463D;
+  --green-300:#095F54;
+  --green-400:#017C6F;
+  --green-500:#02A17A;
+  --red-100: #FE2A51;
+  --red-200: #FC0331;
+  --red-300: #EE0100;
+  --red-400: #FD3800;
+  --red-500: #FD5700;
 }
 
 html,
 body {
   padding: 0;
   margin: 0;
-  background: black;
+  background: #242424;
   color: white; 
   font-family:
     Inter,

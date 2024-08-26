@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import SplineComponent from "./SplineComponent";
 import Button from "./Button";
 
-const UpdateBudgetForm = ({ type, addIncome, addExpense }) => {
+const UpdateBudgetForm = ({
+  type,
+  addIncome,
+  addExpense,
+  editData,
+  prefillData,
+}) => {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
+
+  const isEditMode = prefillData ? true : false;
+  const formType = isEditMode ? "Edit" : "Add";
+  const buttonText = `${formType} ${type == "income" ? "Income" : "Expense"}`;
+  const isSubmitDisabled = !name || !amount;
 
   const handleInput = (e, key) => {
     const { value } = e.target;
@@ -19,12 +30,29 @@ const UpdateBudgetForm = ({ type, addIncome, addExpense }) => {
 
   const handleClick = (e) => {
     e.preventDefault();
-    if (type == "income") addIncome(name, amount);
-    if (type == "expense") addExpense(name, amount);
+
+    if (isEditMode) {
+      editData(prefillData.key - 1, {
+        key: prefillData.key,
+        provider: name,
+        amount: parseInt(amount),
+      });
+    } else if (type == "income") {
+      addIncome(name, amount);
+    } else if (type == "expense") {
+      addExpense(name, amount);
+    }
+
     setName("");
     setAmount("");
   };
-  const isSubmitDisabled = !name || !amount;
+
+  useEffect(() => {
+    if (prefillData) {
+      setName(prefillData.provider);
+      setAmount(prefillData.amount);
+    }
+  }, [prefillData]);
 
   return (
     <Wrapper>
@@ -32,7 +60,7 @@ const UpdateBudgetForm = ({ type, addIncome, addExpense }) => {
         <SplineComponent />
       </LeftContainer>
       <RightContainer>
-        <h2>Add {type == "income" ? "Income" : "Expense"}</h2>
+        <h2>{buttonText}</h2>
         <Input
           value={name}
           onChange={(e) => handleInput(e, "name")}
@@ -46,7 +74,7 @@ const UpdateBudgetForm = ({ type, addIncome, addExpense }) => {
           placeholder="$1000"
         />
         <Button handleClick={handleClick} disabled={isSubmitDisabled}>
-          Add {type == "income" ? "Income" : "Expense"}
+          {buttonText}
         </Button>
       </RightContainer>
     </Wrapper>
